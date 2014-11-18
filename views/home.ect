@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+	<span><%- @constants.tel  %></span>
+
+	<ul class="navigation">
+		<% for link in @nav : %>
+			<li class="<%= "active" if link.active==true? %>">
+				<a href="<%- link.url %>"><%- link.title %></a>
+			</li>
+		<% end %>
+	</ul>
+
+	<h1>Главная страница</h1>
+
+	<h1><%= @title %></h1>
+	<p><%- @content %></p>
+
+	<span><%- @constants.address  %></span>
+</body>
+</html>

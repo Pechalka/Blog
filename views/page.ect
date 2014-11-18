@@ -3,21 +3,21 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 	<span><%- @constants.tel  %></span>
 	
 	<ul class="navigation">
 		<% for link in @nav : %>
-			<li class="<%= "active" if link.active? %>">
+			<li class="<%= "active" if link.active==true? %>">
 				<a href="<%- link.url %>"><%- link.title %></a>
 			</li>
 		<% end %>
 	</ul>
 
-	<h1><%- @title %></h1>
-	<p><%= @content %></p>
+	<h1><%= @title %></h1>
+	<p><%- @content %></p>
 
 	<span><%- @constants.address  %></span>
 </body>

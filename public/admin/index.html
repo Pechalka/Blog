@@ -3,10 +3,116 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+	<script src="app.js"></script>
+
+<script type="text/html" id="pages-list">
+
+<h2 data-bind="text : title"></h2>
+<a href="#newPage" class="btn btn-success">Добавить страницу</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Название</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody data-bind="foreach : pages">
+    <tr>
+      <td data-bind="text : id"></td>
+      <td data-bind="text : title"></td>
+      <td>
+      	<a data-bind="attr : { href : '/pages/' + id }"  target="_blank" class="btn btn-info btn-xs">Просмотр</a>
+      	<a data-bind="attr : { href : '#edit/' + id }"  class="btn btn-warning btn-xs">редактировать</a>
+      	<!-- ko ifnot :isHomePage  -->
+      	<button data-bind="click : $parent.removePage" type="button" class="btn btn-danger btn-xs">удалить</button>
+      	<!-- /ko -->
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</script>
+
+<script type="text/html" id="edit-form">
+
+<form role="form" data-bind="with : page">
+  <div class="form-group">
+    <label for="page-title">Title</label>
+    <input data-bind="value : title" type="text" class="form-control" id="page-title" placeholder="Enter title">
+  </div>
+  <div class="form-group">
+    <label for="page-content">Content</label>
+    <textarea data-bind="value : content" id="page-content" class="form-control" rows="6"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="page-content">Template</label>
+    <select data-bind="options : $parent.templates, value : template" class="form-control">
+	</select>
+  </div>
+  
+  <button data-bind="click : $parent.save" type="submit" class="btn btn-default">save</button>
+</form>
+
+</script>
+
+
+
+<script type="text/html" id="edit-blocks">
+
+<h2 >Встраиваемые блоки</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Название</th>
+      <th>Значение</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody >
+  	<!-- ko foreach : blocks -->
+    <tr>
+      <td data-bind="text : key"></td>
+      <td data-bind="text : value"></td>
+      <td>
+      	<button data-bind="click : $parent.removeBlock" type="button" class="btn btn-danger btn-xs">удалить</button>
+      </td>
+    </tr>
+    <!-- /ko -->
+    <tr>
+      <td ><input data-bind="value : key" type="text" /></td>
+      <td ><input data-bind="value : value" type="text" /></td>
+      <td>
+      	<button data-bind="click : add" type="button" class="btn btn-success btn-xs">добавить</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+</script>
+
 </head>
 <body>
-	<h1>Админка</h1>
-	<h3>Страницы</h3>
-	<h3>Встраиваемые блоки</h3>
+	<div class="container" >
+		<ul class="nav nav-pills">
+		  <li data-bind="css : { active : selectedPage() == 'pages'}" >
+		  	<a href="#">Страницы</a>
+		  </li>
+		  <li data-bind="css : { active : selectedPage() == 'blocks'}">
+		  	<a href="#blocks">встраиваемые блоки</a>
+		  </li>
+		</ul>
+		<div class="row" >
+			<div class="col-xs-12" data-bind="with : content">
+				<!-- ko template : { name : template } -->
+				<!-- /ko -->
+			</div>
+		</div>
+	</div>
 </body>
 </html>
