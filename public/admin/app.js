@@ -57,6 +57,8 @@ var PagesList = function(){
 	self.template = 'pages-list'
 }
 
+
+
 var PageForm = function(){
 	var self = this;
 
@@ -94,6 +96,16 @@ var PageForm = function(){
 	self.template = 'edit-form';
 }
 
+var Block = function(data){
+	var self = this;
+	self.key = data.key;
+	self.id = data.id;
+	self.value = ko.observable(data.value)
+	self.value.subscribe(function(value){
+		data.value = self.value();
+		http.put('/api/blocks/' + data.id, data)
+	})
+}
 
 var EditBlock = function(){
 	var self = this;
@@ -101,7 +113,10 @@ var EditBlock = function(){
 	self.blocks = ko.observableArray([])
 
 	self.activate = function(){
-		http.get('/api/blocks').done(self.blocks)
+		http.get('/api/blocks').done(function(json){
+			var blocks = ko.utils.arrayMap(json, function(d){ return new Block(d)})
+			self.blocks(blocks)
+		})
 	}
 
 	self.key = ko.observable();
@@ -117,13 +132,20 @@ var EditBlock = function(){
 	}
 
 	self.add = function(){
+		var duplicate =	ko.utils.arrayFirst(self.blocks(), function(b){ return b.key == self.key()});
+
+		if (duplicate) {
+			alert('Такой блок уже есть.');
+			return;
+		}
+
 		http.post('/api/blocks', { 
 			key : self.key(),
 			value : self.value()
 		}).done(function(block){
 			self.key('');
 			self.value('');
-			self.blocks.push(block);
+			self.blocks.push(new Block(block));
 		})
 	}
 

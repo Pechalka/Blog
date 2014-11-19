@@ -78,7 +78,9 @@
   	<!-- ko foreach : blocks -->
     <tr>
       <td data-bind="text : key"></td>
-      <td data-bind="text : value"></td>
+      <td >
+        <input data-bind="value : value" type="text" />
+      </td>
       <td>
       	<button data-bind="click : $parent.removeBlock" type="button" class="btn btn-danger btn-xs">удалить</button>
       </td>
